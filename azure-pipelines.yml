@@ -1,5 +1,5 @@
 variables:
-  ConnectedServiceName: 'Azure primary'
+  ConnectedServiceName: 'Azure Primary'
   WebAppName: 'stallions-test'
 
 trigger:
