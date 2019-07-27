@@ -1,5 +1,5 @@
 [![Board Status](https://dev.azure.com/Stallions-A/ace3487f-cac5-47f2-b8fb-2b2907197500/d90cab1c-eb8d-4fbd-b0ac-7ad84547dcea/_apis/work/boardbadge/52174574-a8f7-4b9f-9cf1-01b5288acbcc?columnOptions=1)](https://dev.azure.com/Stallions-A/ace3487f-cac5-47f2-b8fb-2b2907197500/_boards/board/t/d90cab1c-eb8d-4fbd-b0ac-7ad84547dcea/Microsoft.RequirementCategory/)
-
+[![Build Status](https://dev.azure.com/Stallions-A/Codefundo/_apis/build/status/Darth-Kronos.CodeFundo_2019?branchName=master)](https://dev.azure.com/Stallions-A/Codefundo/_build/latest?definitionId=3&branchName=master)
 # CodeFundo_2019
 # Idea for codefundo++
 
