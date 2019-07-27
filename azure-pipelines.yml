@@ -1,7 +1,6 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+variables:
+  ConnectedServiceName: 'Azure primary'
+  WebAppName: 'stallions-test'
 
 trigger:
 - master
@@ -10,10 +9,39 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.6'
+    architecture: 'x64'
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    python3.6 -m venv antenv3.6
+    source antenv3.6/bin/activate
+    pip3.6 install setuptools
+    pip3.6 install -r requirements.txt
+
+  # The displayName is shows in the pipeline UI when a build runs
+  displayName: 'Install Dependencies'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+    replaceExistingArchive: true
+    verbose: # Optional
+
+- task: AzureRMWebAppDeployment@4
+  displayName: Azure App Service Deploy
+  inputs:
+    appType: webAppLinux
+    RuntimeStack: 'PYTHON|3.6'
+    ConnectedServiceName: $(ConnectedServiceName)
+    WebAppName: $(WebAppName)
+    Package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+
+    # The following command is specific to the python-sample-vscode-flask-tutorial code.
+    # You may or may not need a startup command for your own app.
+
+    #StartupCommand: 'gunicorn --bind=0.0.0.0 --workers=4 startup:app'
