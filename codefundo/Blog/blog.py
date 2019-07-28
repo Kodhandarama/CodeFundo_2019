@@ -12,7 +12,7 @@ app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 @app.route("/")
 def home():
     return render_template('home.html')
-
+"""
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -52,3 +52,4 @@ def vote():
 
 if __name__ == '__main__':
     app.run(debug=True)
+"""
