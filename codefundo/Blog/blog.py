@@ -32,7 +32,7 @@ def vote():
     if form.validate_on_submit():
         if form.Voter_ID.data == '123456789' and form.Voter_ID_Confirm.data == form.Voter_ID.data:
             flash('You have been logged in!', 'success')
-            cnx = mysql.connector.connect(user="Stallions@stallions-test", password='qwerty12345.', host="stallions-test.mysql.database.azure.com", port=3306, database='sample', ssl_ca='-codefundo/BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)                
+            cnx = mysql.connector.connect(user="Stallions@stallions-test", password='qwerty12345.', host="stallions-test.mysql.database.azure.com", port=3306, database='sample', ssl_ca='codefundo/BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)                
             mycursor = cnx.cursor()    
             mycursor.execute('select * from login where ID=\'{}\''.format(Username))
             if(mycursor.fetchall()):
