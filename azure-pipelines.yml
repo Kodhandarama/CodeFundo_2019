@@ -1,13 +1,13 @@
-# https://aka.ms/yaml
 variables:
   ConnectedServiceName: 'Azure Primary'
-  WebAppName: 'stallions-officials'
+  WebAppName_1: 'stallions-officials'
+  WebAppName_2: 'stallions-voting'
 
 trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: Hosted Ubuntu 1604
 
 steps:
 - task: UsePythonVersion@0
@@ -20,7 +20,6 @@ steps:
     source antenv3.6/bin/activate
     pip3.6 install setuptools
     pip3.6 install -r requirements.txt
-
   # The displayName is shows in the pipeline UI when a build runs
   displayName: 'Install Dependencies'
 
@@ -34,15 +33,22 @@ steps:
     verbose: # Optional
 
 - task: AzureRMWebAppDeployment@4
-  displayName: Azure App Service Deploy
+  displayName: Azure App Service Deploy(web app 1)
   inputs:
     appType: webAppLinux
     RuntimeStack: 'PYTHON|3.6'
     ConnectedServiceName: $(ConnectedServiceName)
-    WebAppName: $(WebAppName)
+    WebAppName: $(WebAppName_1)
+    Package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+
+- task: AzureRmWebAppDeployment@4
+  displayName: Azure App Service Deploy(web app 2)
+  inputs:
+    appType: webAppLinux
+    RuntimeStack: 'PYTHON|3.6'
+    ConnectedServiceName: $(ConnectedServiceName)
+    WebAppName: $(WebAppName_2)
     Package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
 
     # The following command is specific to the python-sample-vscode-flask-tutorial code.
     # You may or may not need a startup command for your own app.
-
-    StartupCommand: 'startup.txt'
