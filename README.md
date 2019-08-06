@@ -3,7 +3,7 @@
 # CodeFundo_2019
 # Idea for codefundo++
 
-We intend  to build a safe, secure and fast end to end solution for the elections in India.
+We intend to build a safe, secure and fast end to end solution for the elections in India.
 
 The current election process is tedious, messy and inefficient.
 
