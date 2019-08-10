@@ -1,0 +1,168 @@
+{
+    "ApplicationName": "Election",
+    "DisplayName": "Election",
+    "Description": "...",
+    "ApplicationRoles":[
+        {
+            "Name":"Voter",
+            "Description":"Indian Citizen"
+        },
+        {
+            "Name":"Official",
+            "Description":"Elected by Election Commission"
+        }
+    ],
+    "Workflows":[
+        {
+            "Name": "Election",
+            "DisplayName": "Election",
+            "Description":"...",
+            "Initiators": ["Official"],
+            "StartState": "Authentication",
+            "Properties":[
+                {
+                    "Name": "State",
+                    "DisplayName": "State",
+                    "Description":"...",
+                    "Type":{
+                        "Name":"state"
+                    }
+                },
+                {
+                    "Name":"Voter_ID",
+                    "DisplayName":"Voter ID",
+                    "Description":"...",
+                    "Type":{
+                        "Name":"string"
+                    }
+                },
+                {
+                    "Name":"Const_ID",
+                    "DisplayName":"Constituency",
+                    "Description":"...",
+                    "Type":{
+                        "Name":"string"
+                    }
+                },
+                {
+                    "Name":"InstanceVoter",
+                    "DisplayName":"Voter ID",
+                    "Type":{
+                        "Name":"Voter"
+                    }
+                },
+                {
+                    "Name":"InstanceOfficial",
+                    "DisplayName":"Instance Official",
+                    "Type":{
+                        "Name":"Official"
+                    }
+                }
+            ],
+            "Constructor":{
+                "Parameters":[
+                    {
+                        "Name":"Voter_ID",
+                        "DisplayName":"Voter ID",
+                        "Type":{
+                            "Name":"string"
+                        }
+                    },
+                    {
+                        "Name":"Candidate",
+                        "DisplayName":"Candidate",
+                        "Type":{
+                            "Name":"string"
+                        }
+                    }
+                ]
+            },
+            "Functions":[
+                {
+                    "Name":"Auth",
+                    "DisplayName":"Authentication",
+                    "Parameters":[
+                        {
+                            "Name":"Voter_ID",
+                            "DisplayName":"Voter ID",
+                            "Type":{
+                                "Name":"string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name":"Vote",
+                    "DisplayName":"Voting",
+                    "Parameters":[
+                        {
+                            "Name":"Voter",
+                            "DisplayName":"Voter ID",
+                            "Type":{
+                                "Name":"string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name":"Terminate",
+                    "DisplayName":"Terminate",
+                    "Parameters":[] 
+                }
+            ],
+            "States":[
+                {
+                    "Name":"Authentication",
+                    "DisplayName":"Authentication",
+                    "PercentComplete": 30,
+                    "Style":"Success",
+                    "Transitions":[
+                        {
+                            "AllowedRoles":[],
+                            "AllowedInstanceRoles":["InstanceOfficial"],
+                            "Function" :"Auth",
+                            "NextStates":["Voting"],
+                            "DisplayName":"Accepted to Vote" 
+                        },
+                        {
+                            "AllowedRoles":[],
+                            "AllowedInstanceRoles":["InstanceOfficial"],
+                            "Function" :"Terminate",
+                            "NextStates":["Terminate"],
+                            "DisplayName":"Fail"
+                        }
+                    ]
+                },
+                {
+                    "Name":"Voting",
+                    "DisplayName":"Voting",
+                    "PercentComplete":50,
+                    "Style":"Success",
+                    "Transitions":[
+                        {
+                            "AllowedRoles":[],
+                            "AllowedInstanceRoles":["InstanceVoter"],
+                            "Function" :"Vote",
+                            "NextStates":["Accepted"],
+                            "DisplayName":"Accepted"
+                        }
+                    ]
+                },
+                {
+                    "Name":"Accepted",
+                    "DisplayName":"Accepted",
+                    "PercentComplete":100,
+                    "Style":"Success",
+                    "Transitions":[]
+                },
+                {
+                    "Name":"Terminate",
+                    "DisplayName":"Terminate",
+                    "PercentComplete":100,
+                    "Style":"Failure",
+                    "Transitions":[]
+                }
+            ]
+        }
+    ]
+}
