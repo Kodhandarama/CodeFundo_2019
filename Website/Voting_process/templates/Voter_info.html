@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+<form action="/poll">
+    {% for e in data %}
+    <div class="radio">
+        <label><input type="radio" name="field" value="{{ e }}"> {{ e }}<br></label>
+    </div>
+    {% endfor %}
+    <input type="submit" value="Vote" />
+</form>  
+{% endblock content %}

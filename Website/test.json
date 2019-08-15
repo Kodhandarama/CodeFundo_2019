@@ -1,0 +1,197 @@
+{
+    "ApplicationName": "Microsoft CodeFundo EVoting",
+    "DisplayName": "CodeFundo EVoting",
+    "Description": "Application to facilitate Electronic Voting",
+    "ApplicationRoles": 
+    [
+        {
+            "Name": "Voter",
+            "Description": "All eligiable candidates to cast a vote."
+        },
+        {
+            "Name": "Official",
+            "Description": "Governament officals to overlook the process."
+        }
+    ],
+    "Workflows":
+    [
+        {
+            "Name": "Voting",
+            "DisplayName" : "Voting Process",
+            "Initiators" : [ "Official" ],
+            "StartState" : "Authentication",
+            "Properties":
+            [
+                {
+                    "Name": "State",
+                    "DisplayName": "State",
+                    "Type":
+                    {
+                        "Name":"state"
+                    }
+                },
+                {
+                    "Name":"Voter_ID",
+                    "DisplayName":"Voter ID",
+                    "Type":
+                    {
+                        "Name":"Voter_ID"
+                    }
+                }
+            ],
+            "Constructor":
+            {
+                "Parameters":
+                [
+                    {
+                        "Name":"Vote",
+                        "DisplayName":"Vote",
+                        "Type":
+                        {
+                            "Name":"string"
+                        }
+                    }
+                ]
+            },
+            "Functions":
+            [
+                {
+                    "Name":"Terminate",
+                    "DisplayName": "Terminate",
+                    "Parameters": []
+                },
+                {
+                    "Name":"Voting",
+                    "DisplayName":"Voting",
+                    "Parameters":[]
+                },
+                {
+                    "Name":"Authentication",
+                    "DisplayName": "Authentication",
+                    "Parameters": []
+                },
+                {
+                    "Name":"Review",
+                    "DisplayName": "Regbfview",
+                    "Parameters": []
+                },
+                {
+                    "Name":"Completed",
+                    "DisplayName": "Completed",
+                    "Parameters": []
+                }
+            ],
+            "States":
+            [
+                {
+                    "Name":"Authentication",
+                    "DisplayName":"Authentication",
+                    "PercentComplete": 25,
+                    "Style": "Success",
+                    "Transitions":
+                    [
+                        {
+                            "AllowedRoles":["Official"],
+                            "DisplayName": "Authentication",
+                            "Function": "Authentication",
+                            "NextStates": ["Review","Terminate"]
+                        }
+                    ]
+                },
+                {
+                    "Name":"Review",
+                    "DisplayName":"Review",
+                    "Function":"Reviewing",
+                    "PercentComplete": 50,
+                    "Style": "Success",
+                    "Transitions":
+                    [
+                        {
+                            "AllowedRoles":["Voter"],
+                            "DisplayName": "Review",
+                            "Function": "Review",
+                            "NextStates": ["Voting","Terminate"]
+                        }
+                    ]
+                },
+                {
+                    "Name":"Voting",
+                    "DisplayName":"Voting",
+                    "Function":"Voting",
+                    "PercentComplete": 75,
+                    "Style":"Success",
+                    "Transitions":
+                    [
+                        {
+                            "AllowedRoles":["Voter"],
+                            "DisplayName": "Voting",
+                            "Function": "Voting",
+                            "NextStates":[ "Accepted" ]
+                        }
+                    ]
+                },
+                {
+                    "Name":"Terminated",
+                    "DisplayName":"Terminated",
+                    "Function":"Terminate",
+                    "PercentComplete": 100,
+                    "Style":"Failure",
+                    "Transitions":
+                    [
+
+                    ]
+                },
+                {
+                    "Name":"Accepted",
+                    "DisplayName":"Accepted",
+                    "Function":"Completed",
+                    "PercentComplete":100,
+                    "Style":"Success",
+                    "Transitions":
+                    [
+
+                    ]
+                    
+                }
+            ]
+        }
+    ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
