@@ -6,25 +6,30 @@ import mysql.connector
 Username = ''
 cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='/home/hp/Desktop/Projects/CodeFundo/codefundo/BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
 mycursor = cnx.cursor()
+mycursor.execute('select voter_id from voter')
+valid_voters = []
+for i in mycursor.fetchall():
+    valid_voters.append(i[0])
+
+mycursor.execute('select off_email from official')
+val = mycursor.fetchall()
+official_values = []
+if(val):    
+    for c in val:
+        official_values.append(c[0])
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
-
+cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='/home/hp/Desktop/Projects/CodeFundo/Website/BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
+mycursor = cnx.cursor()
 @app.route("/")
 def home():
     return render_template('home.html')
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='/home/hp/Desktop/Projects/CodeFundo/codefundo/BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
-    mycursor = cnx.cursor()    
-    mycursor.execute('select off_email from official')
-    val = mycursor.fetchall()
-    official_values = []
-    if(val):    
-        for c in val:
-            official_values.append(c[0])
+    form = LoginForm()   
     if form.validate_on_submit():
         if form.Username.data in official_values and form.password.data == form.Username.data:
             global Username 
@@ -39,8 +44,8 @@ def vote():
     global Username
     form = VoterForm()
     if form.validate_on_submit():
-        #if form.Voter_ID.data == '123456789' and form.Voter_ID_Confirm.data == form.Voter_ID.data:
-        if form.Voter_ID_Confirm.data == form.Voter_ID.data:
+        if form.Voter_ID_Confirm.data == form.Voter_ID.data and if form.Voter_ID.data in valid_voters:
+            
             flash('You have been logged in!', 'success')
             #cnx = mysql.connector.connect(user="Stallions@stallions-test", password='qwerty12345.', host="stallions-test.mysql.database.azure.com", port=3306, database='sample', ssl_ca='C:\\Users\\Shashank\\Desktop\\Project\\codefundo\\BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)                    
             mycursor.execute('select * from login where loff_email=\'{}\''.format(Username))
