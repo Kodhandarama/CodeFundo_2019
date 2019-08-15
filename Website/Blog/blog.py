@@ -1,12 +1,23 @@
 from flask import Flask, render_template, url_for, flash, redirect
+from adal import AuthenticationContext
 from forms import LoginForm, VoterForm
 import mysql.connector
+import requests
+import json
 
+AUTHORITY = 'https://login.microsoftonline.com/6d6fbafa-d99a-400e-b093-41d4a2553990'
+WORKBENCH_API_URL = 'https://stallions-wfhynd-api.azurewebsites.net/'
+RESOURCE = '60a51ac4-abac-41e3-ab5c-3090b749b45c'
+CLIENT_APP_Id = '40abb33e-a30a-4985-80a6-3372aa605d17'
+CLIENT_SECRET = 'O3U=U4mgk8CYBb?PkOI6oL.rucS_tJ?y'
+auth_context = AuthenticationContext(AUTHORITY)
 
 Username = ''
-cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='/home/hp/Desktop/Projects/CodeFundo/codefundo/BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
+SESSION = ''
+cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='/home/hp/Desktop/CodeFundo_2019/Website/Blog/BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
 mycursor = cnx.cursor()
 mycursor.execute('select voter_id from voter')
+
 valid_voters = []
 for i in mycursor.fetchall():
     valid_voters.append(i[0])
@@ -21,8 +32,7 @@ if(val):
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
-cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='/home/hp/Desktop/Projects/CodeFundo/Website/BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
-mycursor = cnx.cursor()
+
 @app.route("/")
 def home():
     return render_template('home.html')
@@ -44,8 +54,18 @@ def vote():
     global Username
     form = VoterForm()
     if form.validate_on_submit():
-        if form.Voter_ID_Confirm.data == form.Voter_ID.data and if form.Voter_ID.data in valid_voters:
+        if form.Voter_ID_Confirm.data == form.Voter_ID.data and form.Voter_ID.data in valid_voters:
+            data ={
+                "workflowFunctionId":21,
+                "workflowActionParameters":[
+                    {
+                        "name":"Voter_ID",
+                        "value":form.Voter_ID.data
+                    }
+                ]
+            }
             
+            SESSION.post(WORKBENCH_API_URL+ 'api/v2/contracts/18/actions', json= (data))
             flash('You have been logged in!', 'success')
             #cnx = mysql.connector.connect(user="Stallions@stallions-test", password='qwerty12345.', host="stallions-test.mysql.database.azure.com", port=3306, database='sample', ssl_ca='C:\\Users\\Shashank\\Desktop\\Project\\codefundo\\BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)                    
             mycursor.execute('select * from login where loff_email=\'{}\''.format(Username))
@@ -65,6 +85,12 @@ def vote():
 
 
 if __name__ == '__main__':
+
+    SESSION = requests.Session()
+    token = auth_context.acquire_token_with_client_credentials(RESOURCE, CLIENT_APP_Id, CLIENT_SECRET)
+    #print(token)
+    SESSION.headers.update({'Authorization': 'Bearer ' + token['accessToken']})
+
     app.run(debug=True)
 
 """     4479548291
