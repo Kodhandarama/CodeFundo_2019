@@ -16,8 +16,15 @@ auth_context = AuthenticationContext(AUTHORITY)
 dict1={}
 contracts = {}
 Username = ''
-SESSION = ''
-
+SESSION = requests.Session()
+token = auth_context.acquire_token_with_client_credentials(RESOURCE, CLIENT_APP_Id, CLIENT_SECRET)
+#print(token)
+SESSION.headers.update({'Authorization': 'Bearer ' + token['accessToken']})
+x = SESSION.get(WORKBENCH_API_URL+ 'api/v2/contracts?workflowId=5').json()
+for i in x['contracts']:
+    for value in i["contractActions"]:
+        if value["workflowFunctionId"] == 15:
+            contracts.__setitem__(value["parameters"][0]["value"], i['id'])
 cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
 mycursor = cnx.cursor()
 mycursor.execute('select voter_id from voter')
