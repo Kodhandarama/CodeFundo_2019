@@ -1,7 +1,7 @@
 variables:
-  ConnectedServiceName: 'Azure Primary'
+  ConnectedServiceName: 'codefundo'
   WebAppName_1: 'stallions-officials'
-  WebAppName_2: 'stallions-voting'
+  WebAppName_2: 'stallions-voter'
 
 trigger:
 - master
