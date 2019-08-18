@@ -65,7 +65,7 @@ def vote():
                 ]
             }
             
-            SESSION.post(WORKBENCH_API_URL+ 'api/v2/contracts/18/actions', json= (data))
+            #SESSION.post(WORKBENCH_API_URL+ 'api/v2/contracts/18/actions', json= (data))
             flash('You have been logged in!', 'success')
             #cnx = mysql.connector.connect(user="Stallions@stallions-test", password='qwerty12345.', host="stallions-test.mysql.database.azure.com", port=3306, database='sample', ssl_ca='C:\\Users\\Shashank\\Desktop\\Project\\codefundo\\BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)                    
             mycursor.execute('select * from login where loff_email=\'{}\''.format(Username))
@@ -77,7 +77,8 @@ def vote():
                 #mycursor.execute('INSET INTO login values(\'{}\',\'{}\')'.format(Username,form.Voter_ID.data))
                 mycursor.execute(sql, val)
                 cnx.commit()
-            return redirect(url_for('home'))
+            #return redirect(url_for('home'))
+            return render_template('finish.html', title="Voting")
         else:
             flash('Login Unsuccessful. Please check Voter_ID', 'danger')
     return render_template('vote_submit.html', title='Login', form=form)
@@ -86,10 +87,10 @@ def vote():
 
 if __name__ == '__main__':
 
-    SESSION = requests.Session()
-    token = auth_context.acquire_token_with_client_credentials(RESOURCE, CLIENT_APP_Id, CLIENT_SECRET)
+    #SESSION = requests.Session()
+    #token = auth_context.acquire_token_with_client_credentials(RESOURCE, CLIENT_APP_Id, CLIENT_SECRET)
     #print(token)
-    SESSION.headers.update({'Authorization': 'Bearer ' + token['accessToken']})
+    #SESSION.headers.update({'Authorization': 'Bearer ' + token['accessToken']})
 
     app.run(debug=True)
 

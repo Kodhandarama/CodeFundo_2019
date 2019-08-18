@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}  
+<div class="col-12 justify-content-start" style="padding-right: 30px">
+    <div class="content-section">
+      <h3>Voter information</h3>
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-light"><big>{{ vid }}</big></li>
+          <li class="list-group-item list-group-item-light"><big>{{ const }}</big></li>
+        </ul>
+      </p>
+      <a class="btn btn-primary btn-sm" href="{{ url_for('Voter_info') }}">CONFIRM</a>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,11 +1,14 @@
 {% extends "layout.html" %}
-{% block content %}
+{% block content %}  
 <form action="/poll">
-    {% for e in data %}
+    {% for key, value in data.items() %}
     <div class="radio">
-        <label><input type="radio" name="field" value="{{ e }}"> {{ e }}<br></label>
+        <table>
+            <th><img class="rounded-circle account-img" src="static/Party_img/{{ value }}"></th>
+            <th><label><input type="radio" name="field" value="{{ key }}"> {{ key }}</th>
+        </table>
     </div>
     {% endfor %}
-    <input type="submit" value="Vote" />
+    <input type="submit" value="Vote" clas="btn btn-primary btn-sm"/>
 </form>  
 {% endblock content %}
