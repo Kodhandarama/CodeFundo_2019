@@ -18,7 +18,7 @@ contracts = {}
 Username = ''
 SESSION = ''
 
-cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='/home/hp/Desktop/CodeFundo_2019/Website/Blog/BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
+cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
 mycursor = cnx.cursor()
 mycursor.execute('select voter_id from voter')
 valid_voters = []
