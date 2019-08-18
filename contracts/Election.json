@@ -4,83 +4,91 @@
     "Description": "...",
     "ApplicationRoles":[
         {
-            "Name":"Voter",
-            "Description":"Indian Citizen"
-        },
-        {
             "Name":"Official",
             "Description":"Elected by Election Commission"
+        },
+        {
+            "Name":"ElectionCommission",
+            "Description":"..."
         }
     ],
     "Workflows":[
         {
-            "Name": "Election",
-            "DisplayName": "Election",
-            "Description":"...",
-            "Initiators": ["Official"],
-            "StartState": "Authentication",
+            "Name":"Election",
+            "DisplayName":"Election",
+            "Initiators":["ElectionCommission"],
+            "StartState": "Initialisation",
             "Properties":[
                 {
-                    "Name": "State",
-                    "DisplayName": "State",
-                    "Description":"...",
+                    "Name":"State",
+                    "DisplayName":"State",
                     "Type":{
                         "Name":"state"
                     }
                 },
                 {
-                    "Name":"Voter_ID",
-                    "DisplayName":"Voter ID",
-                    "Description":"...",
-                    "Type":{
-                        "Name":"string"
-                    }
-                },
-                {
                     "Name":"Const_ID",
-                    "DisplayName":"Constituency",
-                    "Description":"...",
+                    "DisplayName":"Constituency ID",
                     "Type":{
-                        "Name":"string"
+                        "Name":"int"
                     }
                 },
                 {
-                    "Name":"InstanceVoter",
-                    "DisplayName":"Voter ID",
+                    "Name":"Winner",
+                    "DisplayName":"Winner",
                     "Type":{
-                        "Name":"Voter"
+                        "Name":"int"
                     }
-                },
-                {
-                    "Name":"InstanceOfficial",
-                    "DisplayName":"Instance Official",
-                    "Type":{
-                        "Name":"Official"
-                    }
-                }
+                }  
             ],
             "Constructor":{
                 "Parameters":[
                     {
-                        "Name":"Voter_ID",
-                        "DisplayName":"Voter ID",
+                        "Name":"const_ID",
+                        "DisplayName":"Constituency ID",
                         "Type":{
-                            "Name":"string"
+                            "Name":"int"
                         }
                     },
                     {
-                        "Name":"Candidate",
-                        "DisplayName":"Candidate",
+                        "Name":"candidates",
+                        "DisplayName":"Candidates",
                         "Type":{
-                            "Name":"string"
+                            "Name":"array",
+                            "ElementType":{
+                                "Name":"int"
+                            }
                         }
                     }
                 ]
             },
             "Functions":[
                 {
-                    "Name":"Auth",
-                    "DisplayName":"Authentication",
+                    "Name":"startVoting",
+                    "DisplayName":"Start Voting",
+                    "Parameters":[]
+                },
+                {
+                    "Name":"update",
+                    "DisplayName":"Voting",
+                    "Parameters":[
+                        {
+                            "Name":"Candidate_ID",
+                            "DisplayName":"Candidate ID",
+                            "Type":{
+                                "Name":"int"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name":"cal_vote",
+                    "DisplayName":"complete",
+                    "Parameters":[]
+                },
+                {
+                    "Name":"Enter_detail",
+                    "DisplayName":"Enter Detail",
                     "Parameters":[
                         {
                             "Name":"Voter_ID",
@@ -90,79 +98,158 @@
                             }
                         }
                     ]
-                },
-                {
-                    "Name":"Vote",
-                    "DisplayName":"Voting",
-                    "Parameters":[
-                        {
-                            "Name":"Voter",
-                            "DisplayName":"Voter ID",
-                            "Type":{
-                                "Name":"string"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "Name":"Terminate",
-                    "DisplayName":"Terminate",
-                    "Parameters":[] 
                 }
             ],
             "States":[
                 {
-                    "Name":"Authentication",
-                    "DisplayName":"Authentication",
-                    "PercentComplete": 30,
+                    "Name":"Initialisation",
+                    "DisplayName":"Initialised",
+                    "PercentComplete":25,
+                    "Value":0,
                     "Style":"Success",
                     "Transitions":[
                         {
-                            "AllowedRoles":[],
-                            "AllowedInstanceRoles":["InstanceOfficial"],
-                            "Function" :"Auth",
-                            "NextStates":["Voting"],
-                            "DisplayName":"Accepted to Vote" 
-                        },
-                        {
-                            "AllowedRoles":[],
-                            "AllowedInstanceRoles":["InstanceOfficial"],
-                            "Function" :"Terminate",
-                            "NextStates":["Terminate"],
-                            "DisplayName":"Fail"
+                            "AllowedRoles": ["ElectionCommission"],
+                            "AllowedInstanceRoles": [],
+                            "Function": "startVoting",
+                            "NextStates": [ "Enter_detail" ],
+                            "DisplayName": "Start Voting"
                         }
                     ]
                 },
                 {
-                    "Name":"Voting",
-                    "DisplayName":"Voting",
+                    "Name":"Enter_detail",
+                    "DisplayName":"Enter Voter ID",
+                    "PercentComplete":40,
+                    "Value":1,
+                    "Style":"Success",
+                    "Transitions":[
+                        {
+                            "AllowedRoles": ["ElectionCommission", "Official"],
+                            "AllowedInstanceRoles": [],
+                            "Function": "Enter_detail",
+                            "NextStates": [ "Enter_detail"],
+                            "DisplayName": "..."
+                        },
+                        {
+                            "AllowedRoles": ["ElectionCommission"],
+                            "AllowedInstanceRoles": [],
+                            "Function": "cal_vote",
+                            "NextStates": [ "Result"],
+                            "DisplayName": "Result"
+                        }
+                    ]
+                },
+                {
+                    "Name":"Result",
+                    "DisplayName":"Result",
+                    "PercentComplete":100,
+                    "Value":3,
+                    "Style":"Success",
+                    "Transitions":[]
+                }
+            ]
+        },
+        {
+            "Name":"Voter",
+            "DisplayName":"Voter",
+            "Initiators":[],
+            "StartState": "VoterRegistered",
+            "Properties":[
+                {
+                    "Name":"State",
+                    "DisplayName":"State",
+                    "Type":{
+                        "Name":"state"
+                    }
+                },
+                {
+                    "Name":"VoterID",
+                    "DisplayName":"Voter ID",
+                    "Type":{
+                        "Name":"string"
+                    }
+                },
+                {
+                    "DisplayName":"Constituency ID",
+                    "Name":"Const_ID",
+                    "Type":{
+                        "Name":"int"
+                    }
+                }
+            ],
+            "Constructor":{
+                "Parameters":[
+                    {
+                        "Name":"const_ID",
+                        "DisplayName":"Constituency ID",
+                        "Type":{
+                            "Name":"int"
+                        }
+                    },
+                    {
+                        "Name":"parentContractAddress",
+                        "DisplayName":"Parent Address",
+                        "Type":{
+                            "Name":"address"
+                        }
+                    },
+                    {
+                        "Name":"Voter_ID",
+                        "DisplayName":"Voter ID",
+                        "Type":{
+                            "Name":"string"
+                        }
+                    },
+                    {
+                        "Name": "electionCommission",
+                        "DisplayName": "Election Commissiom",
+                        "Type": {
+                          "Name": "ElectionCommission"
+                        }
+                    }
+                ]
+            },
+            "States":[
+                {
+                    "Name":"VoterRegistered",
+                    "DisplayName":"Voter Resgistered",
                     "PercentComplete":50,
                     "Style":"Success",
                     "Transitions":[
                         {
-                            "AllowedRoles":[],
-                            "AllowedInstanceRoles":["InstanceVoter"],
-                            "Function" :"Vote",
-                            "NextStates":["Accepted"],
-                            "DisplayName":"Accepted"
+                            "AllowedRoles": ["ElectionCommission"],
+                            "AllowedInstanceRoles": [],
+                            "Function": "Voting",
+                            "NextStates": [ "VoteCasted" ],
+                            "DisplayName": "Vote Casted"
                         }
                     ]
                 },
                 {
-                    "Name":"Accepted",
-                    "DisplayName":"Accepted",
+                    "Name":"VoteCasted",
                     "PercentComplete":100,
+                    "DisplayName":"Vote Casted",
                     "Style":"Success",
                     "Transitions":[]
-                },
+                }
+            ],
+            "Functions":[
                 {
-                    "Name":"Terminate",
-                    "DisplayName":"Terminate",
-                    "PercentComplete":100,
-                    "Style":"Failure",
-                    "Transitions":[]
+                    "Name":"Voting",
+                    "DisplayName":"Voitng",
+                    "Parameters":[
+                        {
+                            "Name":"Candidate_ID",
+                            "DisplayName":"Candidate ID",
+                            "Type":{
+                                "Name":"int"
+                            }
+                        }
+                    ]
                 }
             ]
         }
     ]
+           
 }
