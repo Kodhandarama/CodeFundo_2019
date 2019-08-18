@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+{% for key, value in data.items() %}
+<div>
+    <table>
+        <th><label><b>{{ key }}</b></th>&nbsp;&nbsp;
+        <th><img class="rounded-circle account-img" src="static/Party_img/{{ value[0] }}"></th>
+        <th><label><b>{{ value[1] }}</b></th>&nbsp;&nbsp;
+    </table>
+</div>
+{% endfor %}
+{% endblock content %}

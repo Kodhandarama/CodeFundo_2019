@@ -4,14 +4,14 @@ from forms import LoginForm, VoterForm
 import mysql.connector
 import requests
 import json
-"""
-AUTHORITY = 'https://login.microsoftonline.com/6d6fbafa-d99a-400e-b093-41d4a2553990'
-WORKBENCH_API_URL = 'https://stallions-wfhynd-api.azurewebsites.net/'
-RESOURCE = '60a51ac4-abac-41e3-ab5c-3090b749b45c'
-CLIENT_APP_Id = '40abb33e-a30a-4985-80a6-3372aa605d17'
-CLIENT_SECRET = 'O3U=U4mgk8CYBb?PkOI6oL.rucS_tJ?y'
+AUTHORITY = 'https://login.microsoftonline.com/8fb1f5b2-a2b4-409c-bcd6-21a3f3aad0d6'
+WORKBENCH_API_URL = 'https://blockchain-voiqlc-api.azurewebsites.net/'
+RESOURCE = '27c00335-188f-4c3f-a47c-4c825bf4f12c'
+CLIENT_APP_Id = '2a525ae3-8712-4273-9ee9-9318d92028b6' # service ID
+CLIENT_SECRET = 'tZ:FVbBdsHoasBoPay4*[C+Avw7eRy11'# KEY
+Voter_ID_hash=''
 auth_context = AuthenticationContext(AUTHORITY)
-"""
+contracts={}
 Username = ''
 SESSION = ''
 cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='/home/hp/Desktop/CodeFundo_2019/Website/Blog/BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
@@ -51,11 +51,13 @@ def contact_admin():
 @app.route("/process", methods=['GET', 'POST'])
 def process():
     global Username
+    global Voter_ID_hash
     mycursor.execute('select cit_voterid from login where loff_email=\'{}\''.format(Username))
     temp = mycursor.fetchall()
     if(not temp):
         return render_template('process.html', title="Voting")
     val = temp[0][0]
+    Voter_ID_hash = val
     mycursor.execute('select voter_name from voter where voter_id=\'{}\''.format(val))
     val5 = mycursor.fetchall()[0][0]
     mycursor.execute('select voter_const_id from voter where voter_id=\'{}\''.format(val))
@@ -67,6 +69,7 @@ def process():
 @app.route("/Voter_info", methods=['GET', 'POST'])
 def Voter_info():
     global Username
+    global Voter_ID_hash
     poll_data = {}
     mycursor.execute('select cit_voterid from login where loff_email=\'{}\''.format(Username))
     temp = mycursor.fetchall()
@@ -88,9 +91,20 @@ def Voter_info():
 @app.route('/poll')
 def poll():
     global Username
+    global Voter_ID_hash
     vote = request.args.get('field')
     mycursor.execute('select unique_id from candidates where candidate_name=\'{}\''.format(vote))
     num = mycursor.fetchall()[0][0]
+    data ={
+                "workflowFunctionId":21,
+                "workflowActionParameters":[
+                    {
+                        "name":"Candidate_ID",
+                        "value":num
+                    }
+                ]
+            }
+    SESSION.post(WORKBENCH_API_URL+ 'api/v2/contracts/{}/actions'.format(contracts[Voter_ID_hash]), json= (data))
     flash("you voted for {}".format(vote), 'success')
     mycursor.execute('delete from login where loff_email=\'{}\''.format(Username))
     cnx.commit()
@@ -98,7 +112,13 @@ def poll():
 
 
 if __name__ == '__main__':
-    #SESSION = requests.Session()
-    #token = auth_context.acquire_token_with_client_credentials(RESOURCE, CLIENT_APP_Id, CLIENT_SECRET)
-    #SESSION.headers.update({'Authorization': 'Bearer ' + token['accessToken']})
+    SESSION = requests.Session()
+    token = auth_context.acquire_token_with_client_credentials(RESOURCE, CLIENT_APP_Id, CLIENT_SECRET)
+    SESSION.headers.update({'Authorization': 'Bearer ' + token['accessToken']})
+    x = SESSION.get(WORKBENCH_API_URL+ 'api/v2/contracts?workflowId=6').json()
+    for i in x['contracts']:
+        for value in i["contractProperties"]:
+            if value["workflowPropertyId"] == 17:
+                #print(value["parameters"][0]["value"])
+                contracts.__setitem__(value["value"], i['id'])
     app.run(debug=True)
