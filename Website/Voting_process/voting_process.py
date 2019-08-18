@@ -14,7 +14,7 @@ auth_context = AuthenticationContext(AUTHORITY)
 contracts={}
 Username = ''
 SESSION = ''
-cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='/home/hp/Desktop/CodeFundo_2019/Website/Blog/BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
+cnx = mysql.connector.connect(user="stallions@stallions", password='Qwerty12345.', host="stallions.mysql.database.azure.com", port=3306, database='sample', ssl_ca='BaltimoreCyberTrustRoot.pem', ssl_verify_cert=True)
 mycursor = cnx.cursor()
 mycursor.execute('select off_email from official')
 val = mycursor.fetchall()
@@ -119,6 +119,5 @@ if __name__ == '__main__':
     for i in x['contracts']:
         for value in i["contractProperties"]:
             if value["workflowPropertyId"] == 17:
-                #print(value["parameters"][0]["value"])
                 contracts.__setitem__(value["value"], i['id'])
     app.run(debug=True)
