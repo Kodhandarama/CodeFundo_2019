@@ -67,6 +67,7 @@ def vote():
     form = VoterForm()
     if form.validate_on_submit():
         if form.Voter_ID_Confirm.data == form.Voter_ID.data and form.Voter_ID.data in valid_voters:
+            """
             x = SESSION.get(WORKBENCH_API_URL+ 'api/v2/contracts?workflowId=6')
             Voter_ID_hash = form.Voter_ID.data
             if x.status_code == 200:
@@ -88,9 +89,10 @@ def vote():
                     }
                 ]
             }
+            """
             mycursor.execute('select voter_const_id from voter where voter_id=\'{}\''.format(form.Voter_ID.data))
             val2 = mycursor.fetchall()[0][0]
-            SESSION.post(WORKBENCH_API_URL+ 'api/v2/contracts/{}/actions'.format(contracts[val2]), json= (data))
+            #SESSION.post(WORKBENCH_API_URL+ 'api/v2/contracts/{}/actions'.format(contracts[val2]), json= (data))
             
             flash('You have been logged in!', 'success')
             mycursor.execute('select * from login where loff_email=\'{}\''.format(Username))
