@@ -90,13 +90,13 @@ def vote():
                 ]
             }
             """
-            mycursor.execute('select voter_const_id from voter where voter_id=\'{}\''.format(form.Voter_ID.data))
-            val2 = mycursor.fetchall()[0][0]
+            #mycursor.execute('select voter_const_id from voter where voter_id=\'{}\''.format(form.Voter_ID.data))
+            #val2 = mycursor.fetchall()[0][0]
             #SESSION.post(WORKBENCH_API_URL+ 'api/v2/contracts/{}/actions'.format(contracts[val2]), json= (data))
             
             flash('You have been logged in!', 'success')
-            mycursor.execute('select * from login where loff_email=\'{}\''.format(Username))
-            
+            #mycursor.execute('select * from login where loff_email=\'{}\''.format(Username))
+            """
             if(mycursor.fetchall()):
                 mycursor.execute('UPDATE login SET cit_voterid=\'{}\' where loff_email=\'{}\''.format(form.Voter_ID.data, Username))
             else:
@@ -104,6 +104,7 @@ def vote():
                 val = (Username, form.Voter_ID.data)
                 mycursor.execute(sql, val)
                 cnx.commit()
+            """
             return render_template('finish.html', title="Voting")
         else:
             flash('Login Unsuccessful. Please check Voter_ID', 'danger')
