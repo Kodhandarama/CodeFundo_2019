@@ -33,3 +33,5 @@ This process makes sure that the voting process is secure. As any changes made t
 We intend to use the Azure web App service to deploy our website. Azure pipeline is a cloud service that we can use to automatically build and test our code. Therefore any commits in our Github repository, Azure pipeline automatically deploys the commits to our website. Azure Blockchain Workbench is a collection of Azure services designed to help us create and deploy blockchain applications.
 
 Therefore, by using Azure blockchain and its web service, we plan to build a Proof-of-Concept to demonstrate how the voting process can be made more secure, transparent and reliable by simulating the real-world data with our databases.
+
+
